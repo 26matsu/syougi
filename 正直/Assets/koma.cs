@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class koma : MonoBehaviour
 {
-    private Image m_Image;
-    public Sprite[] m_Sprite;
+    // private Image m_Image;
+    // public Sprite[] m_Sprite;
     bool isClick;
-    bool meFlg = true;
+    bool meFlg = true; //自分のターンかどうか判定する変数
     int tempPosition;
 
     //Dictionaryクラスのオブジェクト生成
@@ -66,6 +66,25 @@ public class koma : MonoBehaviour
 
     }
 
+    int komaMoveRoot(int position, Dictionary<int, string> komaInfo){
+        int zachA = tempPosition / 10;
+        int zachB = tempPosition % 10;
+        int zahiA = position / 10;
+        int zahiB = position % 10;
+        if(komaInfo[tempPosition].Contains("fuhyou")){
+            if(meFlg){
+                return tempPosition - 1;
+            }
+            else{
+                return tempPosition + 1;
+            }
+        }
+        // TODO 他のコマの動き制御を作る＆障害物より先に行く動く位の制御
+        else{
+            return position;
+        }
+    }
+
     void moveCheck(int position)
     {
         Dictionary<int, string> komaInfo;
@@ -79,6 +98,8 @@ public class koma : MonoBehaviour
             isClick = true;
             tempPosition = position;
             Debug.Log(komaInfo[tempPosition]);
+            Debug.Log("このコマは"+komaMoveRoot(position,komaInfo)+"に置けます");
+            // TODO ハイライトをする
         }
         else{
             Debug.Log("コマが存在しない");
@@ -88,9 +109,11 @@ public class koma : MonoBehaviour
     void moveKoma(int position)
     {
         Dictionary<int, string> komaInfo;
+        Dictionary<int, string> komaInfoMeTemp;
+        Dictionary<int, string> komaInfoEnemyTemp;
         string tempKomaInfo;
-        Sprite tempImage;
-        Image m_Image2;
+        // Sprite tempImage;
+        // Image m_Image2;
 
         if(meFlg){
             komaInfo = komaInfoMe;
@@ -98,18 +121,9 @@ public class koma : MonoBehaviour
         else{
             komaInfo = komaInfoEnemy;
         }
-        if(!komaInfo.ContainsKey(position) || komaInfo[position] == ""){
-            // TODO 自分のコマを弾くのなくす
-            if(komaInfoMe.ContainsKey(position) && komaInfoMe[position] != ""){ 
-                GameObject.Find(komaInfoMe[position]).transform.Translate(-5f, 0f, 0f);
-                komaInfoMe[position] = "";
-                Debug.Log("駒がとられた！");
-            }
-            if(komaInfoEnemy.ContainsKey(position) && komaInfoEnemy[position] != ""){
-                GameObject.Find(komaInfoEnemy[position]).transform.Translate(-5f, 0f, 0f);
-                komaInfoEnemy[position] = "";
-                Debug.Log("駒がとられた！");
-            }
+        
+        if(position == komaMoveRoot(position,komaInfo) && (!komaInfo.ContainsKey(position) || komaInfo[position] == "")){
+            
             // Debug.Log();
             isClick = false;
 
@@ -122,8 +136,39 @@ public class koma : MonoBehaviour
             // Vector3 tmp = GameObject.Find(komaInfo[tempPosition]).transform.position;
             // GameObject.Find(komaInfo[tempPosition]).transform.position = new Vector3(tmp.x, tmp.y +1, tmp.z);
 
-            GameObject.Find(komaInfo[tempPosition]).transform.Translate(0f, 1f, 0f);
+            int zachA = tempPosition / 10;
+            int zachB = tempPosition % 10;
+            int zahiA = position / 10;
+            int zahiB = position % 10;
 
+            double moveX = (zachA - zahiA) * 0.76;
+            double moveY = (zachB - zahiB) * 0.838;
+
+            Debug.Log(moveX);
+            
+            GameObject.Find(komaInfo[tempPosition]).transform.Translate((float)moveX,(float)moveY, 0f);
+
+            if(meFlg){
+                // 敵の駒を奪えるとき
+                if(komaInfoEnemy.ContainsKey(position) && komaInfoEnemy[position] != ""){ 
+                    GameObject.Find(komaInfoEnemy[position]).transform.Translate((float)zahiA, 0f, 0f);
+                    GameObject.Find(komaInfoEnemy[position]).transform.Rotate(new Vector3(0, 0, 1), 180);
+                    // komaInfoMeTemp[i++] = komaInfoEnemy[position];
+                    komaInfoEnemy[position] = "";
+                    Debug.Log("駒を取った！");
+                }
+            }
+            else{
+                //　自分の駒が奪われるとき
+                if(komaInfoMe.ContainsKey(position) && komaInfoMe[position] != ""){ 
+                    GameObject.Find(komaInfoMe[position]).transform.Translate(-10f + (float)zahiA, 0f, 0f);
+                    GameObject.Find(komaInfoMe[position]).transform.Rotate(new Vector3(0, 0, 1), 180);
+                    // komaInfoEnemyTemp[i++] = komaInfoMe[position];
+                    komaInfoMe[position] = "";
+                    Debug.Log("駒がとられた！");
+                }
+            }
+            
             tempKomaInfo = komaInfo[tempPosition];
             komaInfo[tempPosition] = "";
 
@@ -134,6 +179,7 @@ public class koma : MonoBehaviour
             meFlg = !meFlg;
         }
         else{
+            isClick = false;
             Debug.Log("置けない");
         }
     }
