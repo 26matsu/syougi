@@ -1456,7 +1456,7 @@ GameObject:
   - component: {fileID: 154816390}
   - component: {fileID: 154816391}
   m_Layer: 5
-  m_Name: ginnsyouE1
+  m_Name: ginsyouE1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17128,7 +17128,7 @@ GameObject:
   - component: {fileID: 1588513495}
   - component: {fileID: 1588513496}
   m_Layer: 5
-  m_Name: ginnsyouM1
+  m_Name: ginsyouM1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21760,7 +21760,7 @@ GameObject:
   - component: {fileID: 2009654344}
   - component: {fileID: 2009654345}
   m_Layer: 5
-  m_Name: ginnsyouE2
+  m_Name: ginsyouE2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23179,7 +23179,7 @@ GameObject:
   - component: {fileID: 2104302894}
   - component: {fileID: 2104302895}
   m_Layer: 5
-  m_Name: ginnsyouM2
+  m_Name: ginsyouM2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
